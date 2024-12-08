@@ -13,8 +13,10 @@ import fractalflame.utils.Transformation.NonLinear.HyperbolicTransformation.Hype
 import fractalflame.utils.Transformation.Transformation
 import fractalflame.infrastructure.Pixel.MemoryRepository.PixelMemoryRepository
 import fractalflame.application.ImageProcessor.ImageProcessor
+import fractalflame.application.FutureImageProcessor.FutureImageProcessor
 
 import scala.util.Random
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import cats.effect.{IO, IOApp, ExitCode}
 
@@ -53,7 +55,18 @@ object Main extends IOApp:
 
     val nonLinearTransformation = SphericalTransformation()
 
-    val imageProcessor = ImageProcessor(
+    // val imageProcessor = ImageProcessor(
+    //   emptyImage,
+    //   sampleCount,
+    //   eqCount,
+    //   iterationCount,
+    //   random,
+    //   affineTransformations,
+    //   nonLinearTransformations,
+    //   SymmetryType.NoneSymmetry
+    // )
+
+    val imageProcessor = FutureImageProcessor(
       emptyImage,
       sampleCount,
       eqCount,
@@ -63,8 +76,12 @@ object Main extends IOApp:
       nonLinearTransformations,
       SymmetryType.NoneSymmetry
     )
-  
+
     val readyImageProcessor = imageProcessor.prepareImage
 
-    readyImageProcessor.renderImage("png", "examples/fractal_flame33.png", true) *>
-      IO(ExitCode.Success)
+    // readyImageProcessor.renderImage("png", "examples/fractal_flame33.png", true) *>
+    //   IO(ExitCode.Success)
+
+    IO.fromFuture(IO(readyImageProcessor)).flatMap { imageProcessor =>
+      IO.fromFuture(IO(imageProcessor.renderImage("png", "examples/fractal_flame33.png", true)))
+    }.as(ExitCode.Success)
