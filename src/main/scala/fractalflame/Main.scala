@@ -15,18 +15,18 @@ import fractalflame.infrastructure.Pixel.MemoryRepository.PixelMemoryRepository
 import fractalflame.application.ImageProcessor.ImageProcessor
 
 import scala.util.Random
+
+import cats.effect.{IO, IOApp, ExitCode}
+
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import java.io.File
 import fractalflame.application.Image.DefaultImage.DefaultImage
 import fractalflame.shared.eums.SymmetryType.SymmetryType
 
-object Main:
+object Main extends IOApp:
 
-  def invariant(xPixel: Int, yPixel: Int, xRes: Int, yRes: Int): Boolean = 
-    xPixel >= 0 && xPixel < xRes && yPixel >= 0 && yPixel < yRes
-
-  def main(args: Array[String]): Unit =
+  override def run(args: List[String]): IO[ExitCode] =
     // Гиперпараметры
     val xRes = 1920 // Ширина изображения
     val yRes = 1080 // Высота изображения
@@ -66,4 +66,5 @@ object Main:
   
     val readyImageProcessor = imageProcessor.prepareImage
 
-    readyImageProcessor.renderImage("png", "examples/fractal_flame33.png", true)
+    readyImageProcessor.renderImage("png", "examples/fractal_flame33.png", true) *>
+      IO(ExitCode.Success)

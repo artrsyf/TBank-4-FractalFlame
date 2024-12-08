@@ -10,6 +10,8 @@ import fractalflame.shared.eums.SymmetryType.SymmetryType
 
 import scala.util.Random
 
+import cats.effect.IO
+
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import java.io.File
@@ -130,7 +132,7 @@ case class ImageProcessor(
 
         correctedImage
 
-    def renderImage(format: String, path: String, applyCorrection: Boolean): Unit = 
+    def renderImage(format: String, path: String, applyCorrection: Boolean): IO[Unit] = 
         val correctedImage = if applyCorrection then correctImage() else image
         val symmetrizedImage = applySymmetryToPixels(correctedImage)
         
@@ -144,4 +146,6 @@ case class ImageProcessor(
             outputImage.setRGB(pixel.x, pixel.y, rgb)
         }
 
-        ImageIO.write(outputImage, format, File(path))
+        IO.delay {
+            ImageIO.write(outputImage, format, File(path))
+        }
