@@ -18,5 +18,6 @@ lazy val root = project
     libraryDependencies ++= Seq(
       "org.scalactic" %% "scalactic" % "3.2.18",
       "org.scalatest" %% "scalatest" % "3.2.18" % Test,
+      "org.typelevel" %% "cats-effect" % "3.5.0"
     )
   )
