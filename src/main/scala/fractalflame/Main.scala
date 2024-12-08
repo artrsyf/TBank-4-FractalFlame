@@ -45,9 +45,8 @@ object Main extends IOApp:
 
     val random = new Random()
 
-    val affineTransformations = (0 until eqCount).map(_ =>
-      AffineTransformation()
-    )
+    val affineTransformations =
+      (0 until eqCount).map(_ => AffineTransformation())
 
     val nonLinearTransformations = IndexedSeq(
       PopcornTransformation(random)
@@ -82,6 +81,13 @@ object Main extends IOApp:
     // readyImageProcessor.renderImage("png", "examples/fractal_flame33.png", true) *>
     //   IO(ExitCode.Success)
 
-    IO.fromFuture(IO(readyImageProcessor)).flatMap { imageProcessor =>
-      IO.fromFuture(IO(imageProcessor.renderImage("png", "examples/fractal_flame33.png", true)))
-    }.as(ExitCode.Success)
+    IO.fromFuture(IO(readyImageProcessor))
+      .flatMap { imageProcessor =>
+        IO.fromFuture(
+          IO(
+            imageProcessor
+              .renderImage("png", "examples/fractal_flame33.png", true)
+          )
+        )
+      }
+      .as(ExitCode.Success)

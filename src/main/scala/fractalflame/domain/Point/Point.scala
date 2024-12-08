@@ -1,6 +1,6 @@
 package fractalflame.domain.Point
 
 case class Point(
-    x: Double, 
-    y: Double
+  x: Double,
+  y: Double
 )
