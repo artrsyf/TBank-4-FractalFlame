@@ -4,6 +4,7 @@ import scala.util.Random
 
 import fractalflame.domain.Point.Point
 import fractalflame.utils.Transformation.Transformation
+import fractalflame.utils.Transformation.ColorTransformation
 
 case class AffineTransformation(
     a: Double, 
@@ -15,13 +16,16 @@ case class AffineTransformation(
     rColorCoeff: Int,
     gColorCoeff: Int,
     bColorCoeff: Int
-) extends Transformation:
+) extends ColorTransformation:
 
   override def transformPoint(point: Point): Point =
     val newX = a * point.x + b * point.y + e
     val newY = c * point.x + d * point.y + f
 
     Point(newX, newY)
+  
+  override def colorCoeff: (Int, Int, Int) = 
+    (rColorCoeff, gColorCoeff, bColorCoeff)
 
 object AffineTransformation:
   def apply(): AffineTransformation = 
